@@ -2,3 +2,6 @@ project_id = "rjdjdbudlpwkttbdculx"
 
 [functions.evaluate-management]
 verify_jwt = false
+
+[functions.birdnest-search]
+verify_jwt = false
