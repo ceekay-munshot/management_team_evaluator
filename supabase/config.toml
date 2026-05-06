@@ -1,0 +1,4 @@
+project_id = "rjdjdbudlpwkttbdculx"
+
+[functions.evaluate-management]
+verify_jwt = false
