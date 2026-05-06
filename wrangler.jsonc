@@ -2,8 +2,10 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "management-team-eval",
   "compatibility_date": "2026-05-06",
+  "main": "./worker/index.ts",
   "assets": {
     "directory": "./dist",
+    "binding": "ASSETS",
     "not_found_handling": "single-page-application"
   }
 }

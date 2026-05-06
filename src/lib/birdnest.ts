@@ -1,5 +1,3 @@
-import { supabase } from '@/integrations/supabase/client';
-
 export interface BirdnestResult {
   ticker: string;
   country: string;
@@ -11,14 +9,19 @@ export async function searchCompanies(query: string): Promise<BirdnestResult[]> 
   const trimmed = query.trim();
   if (!trimmed) return [];
 
-  const { data, error } = await supabase.functions.invoke('birdnest-search', {
-    body: { query: trimmed },
+  const response = await fetch('/api/search', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ query: trimmed }),
   });
 
-  if (error) {
-    throw new Error(error.message || 'Search failed');
+  const payload = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    const message = (payload as { error?: string } | null)?.error || `Search failed (${response.status})`;
+    throw new Error(message);
   }
 
-  const results = (data as { results?: BirdnestResult[] })?.results;
+  const results = (payload as { results?: BirdnestResult[] } | null)?.results;
   return Array.isArray(results) ? results : [];
 }
