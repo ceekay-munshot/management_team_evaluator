@@ -8,6 +8,8 @@ const corsHeaders = {
 };
 
 const BIRDNEST_URL = "https://birdnest.muns.io/stock/search";
+const MUNS_BEARER_TOKEN =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ZWE5ZGMyYi0xZDBmLTQ2MzctOGE2Ny0wM2VhNzFmMGYyY2YiLCJlbWFpbCI6Im5hZGFtc2FsdWphQGdtYWlsLmNvbSIsIm9yZ0lkIjoiMSIsImF1dGhvcml0eSI6ImFkbWluIiwiaWF0IjoxNzc3OTgzNTUzLCJleHAiOjE3Nzg0MTU1NTN9.IQKdGF0H3E_KzCy5h5dyTAIFgSMkbHQ5PEtNjtEVY_c";
 
 interface BirdnestEntry {
   ticker: string;
@@ -67,14 +69,7 @@ serve(async (req) => {
       });
     }
 
-    const token = Deno.env.get("MUNS_BEARER_TOKEN");
-    if (!token) {
-      console.error("MUNS_BEARER_TOKEN is not configured");
-      return new Response(JSON.stringify({ error: "Search is not configured" }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+    const token = Deno.env.get("MUNS_BEARER_TOKEN") || MUNS_BEARER_TOKEN;
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 8000);
