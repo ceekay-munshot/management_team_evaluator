@@ -8,6 +8,8 @@ import { getSavedEvaluations, deleteEvaluation } from '@/lib/storage';
 import { getScoreColor } from '@/lib/scoring';
 import { AppShell } from '@/components/AppShell';
 import { DIMENSION_LABELS, DIMENSION_DESCRIPTIONS, type ScoringDimension } from '@/types/evaluation';
+import { CompanySearch } from '@/components/CompanySearch';
+import type { BirdnestResult } from '@/lib/birdnest';
 
 const QUICK_SELECT = [
   { ticker: 'AAPL', name: 'Apple Inc.' },
@@ -39,6 +41,12 @@ const Index = () => {
     navigate(`/evaluate?company=${encodeURIComponent(query)}`);
   };
 
+  const handleSelectResult = (r: BirdnestResult) => {
+    setCompanyName(r.name);
+    setTicker(r.ticker);
+    navigate(`/evaluate?company=${encodeURIComponent(r.name)}`);
+  };
+
   const handleQuickSelect = (company: typeof QUICK_SELECT[0]) => {
     navigate(`/evaluate?company=${encodeURIComponent(company.name)}`);
   };
@@ -67,14 +75,13 @@ const Index = () => {
 
         {/* Search form */}
         <form onSubmit={handleSearch} className="flex gap-2 max-w-2xl mx-auto">
-          <div className="flex-1 relative">
-            <Input
-              value={companyName}
-              onChange={e => setCompanyName(e.target.value)}
-              placeholder="Company name (e.g. Apple Inc.)"
-              className="h-11 bg-card"
-            />
-          </div>
+          <CompanySearch
+            value={companyName}
+            onValueChange={setCompanyName}
+            onSelect={handleSelectResult}
+            placeholder="Company name (e.g. Reliance)"
+            className="flex-1"
+          />
           <Input
             value={ticker}
             onChange={e => setTicker(e.target.value.toUpperCase())}
